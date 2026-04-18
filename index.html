@@ -16,7 +16,11 @@
           <p>Keep your recipe library, search instantly, and cook with confidence.</p>
         </div>
       </div>
-      <button id="openAddModal" class="primary-btn">Add Recipe</button>
+      <div class="topbar-controls">
+        <input id="searchInput" type="search" placeholder="Search recipes..." />
+        <button id="openAddModal" class="primary-btn">Add Recipe</button>
+      </div>
+      <button id="profileButton" class="secondary-btn">Profile</button>
     </header>
 
     <section class="hero-panel">
@@ -41,10 +45,61 @@
       </div>
     </section>
 
-    <section class="search-actions">
-      <div class="search-box">
-        <input id="searchInput" type="search" placeholder="Search by title, ingredient, or tag..." />
+    <section class="profile-page hidden" id="profilePage">
+      <div class="profile-page-panel">
+        <div class="profile-page-header">
+          <div>
+            <p class="eyebrow">Profile</p>
+            <h2>Account details</h2>
+            <p>Review your personal information and update it whenever needed.</p>
+          </div>
+          <button type="button" class="secondary-btn" id="closeProfilePage">Close</button>
+        </div>
+
+        <div class="profile-card summary-card">
+          <div class="profile-card-left">
+            <div class="profile-avatar-large">👩‍🍳</div>
+            <div>
+              <h3>Umaima Faisal</h3>
+              <p class="profile-role">Donor</p>
+              <p class="profile-location">Lahore, Punjab, Pakistan</p>
+            </div>
+          </div>
+          <button type="button" class="secondary-btn edit-btn">Edit</button>
+        </div>
+
+        <div class="profile-card info-card">
+          <div class="profile-card-header">
+            <h3>Personal information</h3>
+            <button type="button" class="secondary-btn edit-btn">Edit</button>
+          </div>
+          <div class="profile-fields">
+            <div class="field"><span>First Name</span><strong class="display-value">Umaima</strong><input class="edit-input hidden" data-profile-field="firstName" type="text" value="Umaima" /></div>
+            <div class="field"><span>Last Name</span><strong class="display-value">Faisal</strong><input class="edit-input hidden" data-profile-field="lastName" type="text" value="Faisal" /></div>
+            <div class="field"><span>Email Address</span><strong class="display-value">Umaimafl030@gmail.com</strong><input class="edit-input hidden" data-profile-field="email" type="email" value="Umaimafl030@gmail.com" /></div>
+            <div class="field"><span>Phone</span><strong class="display-value">0316-4567890</strong><input class="edit-input hidden" data-profile-field="phone" type="text" value="0316-4567890" /></div>
+            <div class="field"><span>Role</span><strong class="display-value">Donor</strong><input class="edit-input hidden" data-profile-field="role" type="text" value="Donor" /></div>
+          </div>
+        </div>
+
+        <div class="profile-card address-card">
+          <div class="profile-card-header">
+            <h3>Address</h3>
+            <button type="button" class="secondary-btn edit-btn">Edit</button>
+          </div>
+          <div class="profile-fields profile-grid-two">
+            <div class="field"><span>Country</span><strong class="display-value">Pakistan</strong><input class="edit-input hidden" data-profile-field="country" type="text" value="Pakistan" /></div>
+            <div class="field"><span>City/State</span><strong class="display-value">Lahore, Punjab</strong><input class="edit-input hidden" data-profile-field="cityState" type="text" value="Lahore, Punjab" /></div>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button id="logoutButton" type="button" class="secondary-btn danger">Log Out</button>
+        </div>
       </div>
+    </section>
+
+    <section class="search-actions">
       <div class="filters">
         <select id="categoryFilter">
           <option value="all">All Categories</option>

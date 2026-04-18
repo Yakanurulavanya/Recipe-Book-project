@@ -9,6 +9,14 @@ export const dom = {
   favoriteCount: document.querySelector('#favoriteCount'),
   categoryCount: document.querySelector('#categoryCount'),
   openAddModal: document.querySelector('#openAddModal'),
+  profileButton: document.querySelector('#profileButton'),
+  profilePage: document.querySelector('#profilePage'),
+  closeProfilePage: document.querySelector('#closeProfilePage'),
+  dateGrid: document.querySelector('#dateGrid'),
+  selectedDateSummary: document.querySelector('#selectedDateSummary'),
+  logoutButton: document.querySelector('#logoutButton'),
+  profileRecipeList: document.querySelector('#profileRecipeList'),
+  profilePageStats: document.querySelector('#profilePageStats'),
   recipeModal: document.querySelector('#recipeModal'),
   modalTitle: document.querySelector('#modalTitle'),
   closeModal: document.querySelector('#closeModal'),
@@ -24,6 +32,59 @@ export const dom = {
   rating: document.querySelector('#rating'),
   tags: document.querySelector('#tags'),
 };
+
+export function renderDateGrid(dateStats, activeDate) {
+  dom.dateGrid.innerHTML = dateStats
+    .map((item) => {
+      const isActive = item.dateKey === (activeDate || 'all');
+      return `
+        <button type="button" class="date-card ${isActive ? 'active' : ''}" data-date="${item.dateKey}">
+          <span>${item.label}</span>
+          <strong>${item.count}</strong>
+        </button>
+      `;
+    })
+    .join('');
+}
+
+export function setSelectedDateSummary(message) {
+  dom.selectedDateSummary.textContent = message;
+}
+
+export function openProfilePage() {
+  dom.profilePage.classList.remove('hidden');
+}
+
+export function closeProfilePage() {
+  dom.profilePage.classList.add('hidden');
+}
+
+export function setProfilePageStats({ total, favorites, categories }) {
+  if (dom.profilePageStats) {
+    dom.profilePageStats.textContent = `Total recipes: ${total} · Favorites: ${favorites} · Categories: ${categories}`;
+  }
+}
+
+export function renderProfileRecipes(recipes) {
+  if (!dom.profileRecipeList) return;
+  if (!recipes.length) {
+    dom.profileRecipeList.innerHTML = '<div class="empty-state"><h3>No recipes added on this date</h3><p>Select another day to view more entries.</p></div>';
+    return;
+  }
+
+  dom.profileRecipeList.innerHTML = recipes
+    .map((recipe) => `
+      <article class="profile-recipe-card">
+        <div>
+          <h4>${recipe.title}</h4>
+          <p>${recipe.cookingTime} • ${recipe.difficulty} • ${recipe.rating} ★</p>
+          <p>${recipe.ingredients.length} ingredients · ${recipe.steps.length} steps</p>
+        </div>
+        <div class="profile-recipe-tags">${recipe.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}</div>
+      </article>
+    `)
+    .join('');
+}
 
 export function renderRecipeCards(recipes) {
   if (!recipes.length) {

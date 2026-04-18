@@ -1,5 +1,5 @@
-import { initializeRecipeStore, getRecipes, addRecipe, updateRecipe, deleteRecipe, toggleFavorite, findRecipeById, getUniqueCategories } from './service.js';
-import { dom, renderRecipeCards, renderCategoryOptions, updateStats, openModal, closeModal, getFormRecipeData, showToast } from './ui.js';
+import { initializeRecipeStore, getRecipes, addRecipe, updateRecipe, toggleFavorite, findRecipeById, getUniqueCategories } from './service.js';
+import { dom, renderRecipeCards, renderCategoryOptions, updateStats, openModal, closeModal, getFormRecipeData, showToast, openProfilePage, closeProfilePage } from './ui.js';
 
 const state = {
   recipes: [],
@@ -8,10 +8,30 @@ const state = {
   difficulty: 'all',
   rating: 'all',
   sortBy: 'newest',
+  selectedDate: null,
 };
 
 async function loadState() {
   state.recipes = await initializeRecipeStore();
+}
+
+function getDateKey(timestamp) {
+  return new Date(timestamp).toISOString().split('T')[0];
+}
+
+function formatDateLabel(timestamp) {
+  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function getDateStats(recipes) {
+  const stats = recipes.reduce((acc, recipe) => {
+    const dateKey = getDateKey(recipe.createdAt);
+    if (!acc[dateKey]) acc[dateKey] = { dateKey, label: formatDateLabel(recipe.createdAt), count: 0 };
+    acc[dateKey].count += 1;
+    return acc;
+  }, {});
+
+  return [{ dateKey: 'all', label: 'All Dates', count: recipes.length }, ...Object.values(stats).sort((a, b) => (a.dateKey < b.dateKey ? 1 : -1))];
 }
 
 function filterAndSortRecipes() {
@@ -21,7 +41,8 @@ function filterAndSortRecipes() {
       const categoryMatch = state.category === 'all' || recipe.category === state.category;
       const difficultyMatch = state.difficulty === 'all' || recipe.difficulty === state.difficulty;
       const ratingMatch = state.rating === 'all' || recipe.rating >= Number(state.rating);
-      return queryMatch && categoryMatch && difficultyMatch && ratingMatch;
+      const dateMatch = !state.selectedDate || getDateKey(recipe.createdAt) === state.selectedDate;
+      return queryMatch && categoryMatch && difficultyMatch && ratingMatch && dateMatch;
     })
     .sort((a, b) => {
       if (state.sortBy === 'rating') return b.rating - a.rating || b.createdAt - a.createdAt;
@@ -66,13 +87,6 @@ async function handleRecipeGridClick(event) {
     if (recipe) openModal(recipe);
     return;
   }
-  if (action === 'delete') {
-    if (confirm('Delete this recipe?')) {
-      state.recipes = await deleteRecipe(id);
-      refreshView();
-      showToast('Recipe deleted');
-    }
-  }
 }
 
 async function handleFormSubmit(event) {
@@ -95,6 +109,12 @@ async function handleFormSubmit(event) {
   refreshView();
 }
 
+function handleProfilePageClick(event) {
+  const editButton = event.target.closest('.edit-btn');
+  if (!editButton) return;
+  showToast('Profile edit clicked');
+}
+
 function initEvents() {
   dom.openAddModal.addEventListener('click', () => openModal());
   dom.closeModal.addEventListener('click', closeModal);
@@ -104,6 +124,16 @@ function initEvents() {
   dom.difficultyFilter.addEventListener('change', handleFilterChange);
   dom.ratingFilter.addEventListener('change', handleFilterChange);
   dom.sortSelect.addEventListener('change', handleFilterChange);
+  dom.profileButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    openProfilePage();
+  });
+  dom.closeProfilePage.addEventListener('click', closeProfilePage);
+  dom.logoutButton.addEventListener('click', () => {
+    closeProfilePage();
+    showToast('Logged out');
+  });
+  dom.profilePage.addEventListener('click', handleProfilePageClick);
   dom.recipeGrid.addEventListener('click', handleRecipeGridClick);
   dom.recipeForm.addEventListener('submit', handleFormSubmit);
   dom.recipeModal.addEventListener('click', (event) => {
