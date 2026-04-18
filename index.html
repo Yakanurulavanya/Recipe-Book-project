@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Recipe Manager</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">🍳</div>
+        <div>
+          <h1>Smart Recipe Manager</h1>
+          <p>Keep your recipe library, search instantly, and cook with confidence.</p>
+        </div>
+      </div>
+      <button id="openAddModal" class="primary-btn">Add Recipe</button>
+    </header>
+
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <p class="eyebrow">Your kitchen command center</p>
+        <h2>Organize, search, and favorite every recipe easily.</h2>
+        <p>Add ingredients, steps, time, difficulty, category, rating, tags, and filter your favorites.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-label">Total Recipes</span>
+          <strong id="totalRecipes">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Favorites</span>
+          <strong id="favoriteCount">0</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Categories</span>
+          <strong id="categoryCount">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-actions">
+      <div class="search-box">
+        <input id="searchInput" type="search" placeholder="Search by title, ingredient, or tag..." />
+      </div>
+      <div class="filters">
+        <select id="categoryFilter">
+          <option value="all">All Categories</option>
+        </select>
+        <select id="difficultyFilter">
+          <option value="all">All Difficulty</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+        <select id="ratingFilter">
+          <option value="all">All Ratings</option>
+          <option value="5">5 stars</option>
+          <option value="4">4+ stars</option>
+          <option value="3">3+ stars</option>
+        </select>
+        <select id="sortSelect">
+          <option value="newest">Sort by Newest</option>
+          <option value="rating">Sort by Rating</option>
+        </select>
+      </div>
+    </section>
+
+    <main>
+      <section class="card-grid" id="recipeGrid"></section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="recipeModal">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Recipe</h2>
+        <button class="close-btn" id="closeModal">✕</button>
+      </div>
+      <form id="recipeForm" class="recipe-form">
+        <div class="form-group">
+          <label for="title">Recipe Title</label>
+          <input id="title" name="title" type="text" placeholder="e.g. Lemon Garlic Chicken" required />
+        </div>
+        <div class="form-group">
+          <label for="ingredients">Ingredients</label>
+          <textarea id="ingredients" name="ingredients" rows="3" placeholder="Separate with commas" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="steps">Cooking Steps</label>
+          <textarea id="steps" name="steps" rows="4" placeholder="One step per line" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cookingTime">Cooking Time</label>
+            <input id="cookingTime" name="cookingTime" type="text" placeholder="e.g. 30 mins" required />
+          </div>
+          <div class="form-group">
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty" name="difficulty" required>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category</label>
+            <input id="category" name="category" type="text" placeholder="e.g. Dinner" required />
+          </div>
+          <div class="form-group">
+            <label for="rating">Rating</label>
+            <select id="rating" name="rating" required>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tags">Tags</label>
+          <input id="tags" name="tags" type="text" placeholder="Separate with commas" />
+        </div>
+        <input type="hidden" id="recipeId" name="recipeId" />
+        <div class="form-actions">
+          <button type="button" class="secondary-btn" id="cancelModal">Cancel</button>
+          <button type="submit" class="primary-btn">Save Recipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
